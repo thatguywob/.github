@@ -111,6 +111,10 @@ defaults, and how a repo calls one — see [`docs/WORKFLOWS.md`](docs/WORKFLOWS.
 
 For a complete index of available reusable workflows (ste-lint, reusable-lint, reusable-ci-contract, reusable-fork-safety, reusable-scorecard, reusable-first-contributor, reusable-add-help-wanted, reusable-pr-nudges, publish-flatpak, and others), integration templates, and input/output reference, see [`.github/WORKFLOWS.md`](WORKFLOWS.md).
 
+## CI Contract Pattern (Green Criteria)
+
+Every TunaOS repo that uses the CI contract pattern must declare green criteria in `.github/green-criteria.yml`. For schema, examples, troubleshooting, and branch protection integration, see [`.github/GREEN-CRITERIA.md`](GREEN-CRITERIA.md).
+
 ## Simplified Technical English linting
 
 Every TunaOS repository uses STE (Simplified Technical English) linting to ensure documentation is clear and accessible to a global audience. For setup, troubleshooting, and common STE violations, see [`.github/STE-LINTING.md`](STE-LINTING.md).

@@ -153,7 +153,7 @@ jobs:
 - Checks that every `gates` job exists in a workflow.
 - Fails if any criterion is unmeetable or stale.
 
-**Learn more:** [`.github/GREEN-CRITERIA.md`](GREEN-CRITERIA.md) (planned)
+**Learn more:** [`.github/GREEN-CRITERIA.md`](GREEN-CRITERIA.md) for schema reference, worked examples, and troubleshooting
 
 ---
 

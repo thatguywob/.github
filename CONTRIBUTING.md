@@ -112,6 +112,7 @@ baseline called for by
 
 - Ask in the relevant issue or PR.
 - See the [architecture guide](https://github.com/tuna-os/docs/blob/main/docs/architecture.md) in `tuna-os/docs` — architecture overview, per-repository map, and the image/ISO build-pipeline reference.
+- Review [`.github/WORKFLOWS.md`](https://github.com/tuna-os/.github/blob/main/.github/WORKFLOWS.md) for available reusable CI workflows and integration templates.
 - For security issues, use the private channel described in `SECURITY.md` —
   never paste secrets or exploit details into a public issue.
 

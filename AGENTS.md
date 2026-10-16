@@ -107,6 +107,10 @@ line to add.
 For the reusable workflows these checks operate on — what each input does, its
 defaults, and how a repo calls one — see [`docs/WORKFLOWS.md`](docs/WORKFLOWS.md).
 
+## Reusable workflows
+
+For a complete index of available reusable workflows (ste-lint, reusable-lint, reusable-ci-contract, reusable-fork-safety, reusable-scorecard, reusable-first-contributor, reusable-add-help-wanted, reusable-pr-nudges, publish-flatpak, and others), integration templates, and input/output reference, see [`.github/WORKFLOWS.md`](WORKFLOWS.md).
+
 ## Workflow permissions check
 
 ```bash

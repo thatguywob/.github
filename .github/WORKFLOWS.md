@@ -61,7 +61,7 @@ jobs:
 
 **Ratchet pattern:** The budget can only go down, never up. This prevents regressions and incentivizes incremental prose improvements.
 
-**Learn more:** [`.github/STE-LINTING.md`](STE-LINTING.md) (planned)
+**Learn more:** [`.github/STE-LINTING.md`](STE-LINTING.md) for detailed guide on STE rules, ratcheting, and common violations
 
 ---
 

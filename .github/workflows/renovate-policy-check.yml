@@ -14,6 +14,11 @@ on:
       - "project-starter/renovate.json"
       - "scripts/check-renovate-automerge-policy.py"
       - "scripts/test-renovate-automerge-policy.py"
+      # The copy that actually drifts: project-starter/ is copied verbatim
+      # into scaffolded repos, which never run this workflow. The sync
+      # assertion in test-renovate-automerge-policy.py only runs if a change
+      # to this file triggers the workflow (#189).
+      - "project-starter/scripts/check-renovate-automerge-policy.py"
   pull_request:
     branches: [main]
     paths:
@@ -22,6 +27,7 @@ on:
       - "project-starter/renovate.json"
       - "scripts/check-renovate-automerge-policy.py"
       - "scripts/test-renovate-automerge-policy.py"
+      - "project-starter/scripts/check-renovate-automerge-policy.py"
   workflow_dispatch:
 
 permissions:

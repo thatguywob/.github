@@ -1,6 +1,6 @@
 # Org-wide ROADMAP inventory
 
-**Last verified**: 2026-09-02 · **Source**: `gh api repos/tuna-os/<repo>/contents/ROADMAP.md?ref=<default_branch>` against every active (non-archived) repository returned by `gh repo list tuna-os --limit 200`, which is currently **40** repositories.
+**Last verified**: 2026-10-19 · **Source**: `gh api repos/tuna-os/<repo>/contents/ROADMAP.md?ref=<default_branch>` against every active (non-archived) repository returned by `gh repo list tuna-os --limit 200`, which is currently **40** repositories.
 
 tuna-os/tunaOS#1295 and tuna-os/tunaOS#1361 both found the same problem from different
 angles: nobody — human or agent — could see at a glance which repos in the
@@ -24,7 +24,7 @@ scope problem, not a coverage problem: a table that only re-checks the repos it
 already lists cannot notice a repository being created. See
 `tuna-os/.github#52`.
 
-## Coverage: 36 / 40 active repos
+## Coverage: 36 / 43 active repos
 
 Roadmap coverage grew from 16/37 on August 14 to 36/37 on August 30 against the
 scope known at the time; re-measured against the full active set on September 2
@@ -42,46 +42,49 @@ it is **36 / 40**. The four repositories without a roadmap:
 
 | Repo | Default branch | ROADMAP.md? |
 |---|---|---|
+| .github | main | ✅ |
+| PaperWM | release | ❌ |
 | Tavern | main | ✅ |
 | bluefin-cli | main | ✅ |
-| blueshell | ptyxis-port | ❌ |
-| bootc-installer | dev | ✅ (tuna-os/bootc-installer#14, merged 08-14) |
+| blueshell | ptyxis-port | ✅ |
+| bootc-installer | dev | ✅ |
 | bootc-migrate | main | ✅ |
+| bootsahi | main | ✅ |
+| branding | main | ✅ |
+| bst-ci | main | ✅ |
+| ccleft | main | ❌ |
+| changelog-action | master | ✅ |
+| compass | main | ✅ |
 | corral | main | ✅ |
 | docs | main | ✅ |
 | dualcut | main | ✅ |
+| finupdate | main | ✅ |
+| fisherman | dev | ✅ |
+| flatpak-index | main | ✅ |
+| gnome-hive-monitor | main | ✅ |
 | gtk-office-suite | main | ✅ |
+| hive | v4 | ✅ |
+| hive-operator | main | ❌ |
+| homebrew-tap | main | ✅ |
+| iced | master | ✅ |
 | iso-builder | main | ✅ |
+| libcosmic | master | ❌ |
+| mandelbrot | main | ✅ |
+| mariner | master | ✅ |
 | protota | main | ✅ |
+| quickcast | main | ✅ |
+| rdocx | main | ❌ |
+| remora | main | ✅ |
+| rust-atomicwrites | master | ❌ |
+| scoop-bucket | main | ✅ |
+| spindle | main | ✅ |
 | tacklebox | main | ✅ |
 | tromso | main | ✅ |
+| tuna-desktop | main | ❌ |
 | tunaOS | main | ✅ |
 | tunaos-packages | main | ✅ |
 | wootc | main | ✅ |
 | xfce-linux | main | ✅ |
-| .github | main | ✅ |
-| bootc-installer-asahi | main | ✅ |
-| branding | main | ✅ |
-| bst-ci | main | ✅ |
-| changelog-action | master | ✅ |
-| debian-copr | main | ✅ |
-| finupdate | main | ✅ |
-| fisherman | dev | ✅ |
-| flatpak-index | main | ✅ |
-| hive | v4 | ❌ |
-| homebrew-tap | main | ✅ |
-| kde-build-meta | master | ❌ |
-| mandelbrot | main | ✅ |
-| mariner | master | ✅ |
-| remora | main | ✅ |
-| scoop-bucket | main | ✅ |
-| spindle | main | ❌ (proposed: `strategy/spindle-roadmap`) |
-| suite-common | main | ✅ |
-| suite-common-rust | main | ✅ |
-| tuna-installer-cosmic | main | ✅ |
-| tuna-installer-kde | main | ✅ |
-| tuna-installer-niri | main | ✅ |
-| tuna-installer-xfce | main | ✅ |
 
 ## A note on "ROADMAP.md exists" vs. reachable
 

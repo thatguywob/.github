@@ -1,0 +1,63 @@
+name: Script self-tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/actions/**"
+      - ".github/scripts/**"
+      - ".github/workflows/script-self-tests.yml"
+      - "scripts/**"
+      - "tests/fixtures/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/actions/**"
+      - ".github/scripts/**"
+      - ".github/workflows/script-self-tests.yml"
+      - "scripts/**"
+      - "tests/fixtures/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python self-tests
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run Python self-tests
+        run: |
+          set -euo pipefail
+          for test in \
+            scripts/test-arch-plan.py \
+            scripts/test-release-verification.py \
+            scripts/test-renovate-automerge-policy.py \
+            scripts/test-roadmap-index.py \
+            scripts/test_check_workflow_action_pins.py \
+            scripts/test_check_workflow_permissions.py \
+            .github/scripts/test_ci_contract.py \
+            .github/scripts/test_fork_safety.py \
+            .github/scripts/test_workflow_introspector.py \
+            .github/actions/update-flatpak-index/test_update_index.py
+          do
+            python3 "$test"
+          done
+
+  node:
+    name: Node self-tests
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Run Node self-tests
+        run: node --test scripts/test-auto-qa-tuner.mjs

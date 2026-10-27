@@ -121,6 +121,9 @@ baseline called for by
   .github/workflows`. The script and a ready-to-run workflow ship there and are
   copied in.
 
+For Flatpak publishing credentials, organization-secret access, and rotation,
+see [the Flatpak secret policy](https://github.com/tuna-os/.github/blob/main/.github/SECRETS.md).
+
 ## Getting help
 
 - Ask in the relevant issue or PR.

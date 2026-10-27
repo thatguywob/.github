@@ -10,10 +10,9 @@ name: Publish Flatpak (reusable)
 # the ceiling every job inherits (a job may only be downgraded from it), so it
 # is the minimum `build-oci` needs (`contents: read`); `packages: write` and
 # `contents: write` are granted only on the `publish` and `release-bundles`
-# jobs that genuinely need them. The workflow declares the one secret it uses
-# (`FLATPAK_INDEX_TOKEN`) rather than `secrets: inherit`, and callers are
-# encouraged to pass named secrets too -- `secrets: inherit` still forwards
-# every caller secret, this workflow only ever reads the ones it declares.
+# jobs that genuinely need them. Same-org callers can forward the org-level
+# FLATPAK_INDEX_TOKEN with `secrets: inherit`; explicit named mappings remain
+# supported. See .github/SECRETS.md for provisioning and rotation.
 #
 # Not used by Tavern: it has a prod/main branch split and a promotion flow
 # this workflow doesn't model. See tuna-os/tunaos#1183 for that follow-up.
@@ -106,7 +105,8 @@ on:
         default: ghcr.io
     secrets:
       FLATPAK_INDEX_TOKEN:
-        required: true
+        description: Org secret with Contents write access to tuna-os/docs; needed only when publish is true
+        required: false
 
 permissions:
   # Least privilege. This is a reusable workflow, so this default is the
@@ -134,6 +134,17 @@ jobs:
       primary: ${{ steps.plan.outputs.primary }}
       runners: ${{ steps.plan.outputs.runners }}
     steps:
+      - name: Check index secret before building
+        if: inputs.publish
+        env:
+          FLATPAK_INDEX_TOKEN: ${{ secrets.FLATPAK_INDEX_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "$FLATPAK_INDEX_TOKEN" ]; then
+            echo "::error::FLATPAK_INDEX_TOKEN is unavailable. Grant this caller access to the org secret and forward it with secrets: inherit or a named mapping. See tuna-os/.github .github/SECRETS.md." >&2
+            exit 1
+          fi
+
       # No checkout: in a workflow_call job a checkout is the CALLER's repo,
       # which has no scripts/arch-plan.py. The composite action carries the
       # planner from this repo and exits non-zero on any invalid list.
@@ -280,12 +291,13 @@ jobs:
       # independent clone/retry/push cycle, same as before consolidation.
       - name: Update central index — ${{ matrix.arch }}
         uses: tuna-os/.github/.github/actions/publish-flatpak-index@main
+        env:
+          FLATPAK_INDEX_TOKEN: ${{ secrets.FLATPAK_INDEX_TOKEN }}
         with:
           oci-dir: oci-${{ matrix.arch }}
           repo-name: ${{ inputs.repo-name }}
           registry: ${{ inputs.registry }}
           tags: latest
-          token: ${{ secrets.FLATPAK_INDEX_TOKEN }}
 
   release-bundles:
     name: Attach bundles to release

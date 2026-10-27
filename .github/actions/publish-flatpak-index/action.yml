@@ -32,8 +32,8 @@ inputs:
     required: false
     default: tuna-os/docs
   token:
-    description: Token with push access to docs-repo (FLATPAK_INDEX_TOKEN)
-    required: true
+    description: Optional override for FLATPAK_INDEX_TOKEN environment variable; token with push access to docs-repo
+    required: false
   max-attempts:
     description: Max push attempts before failing the step
     required: false
@@ -52,10 +52,19 @@ runs:
         REGISTRY: ${{ inputs.registry }}
         TAGS: ${{ inputs.tags }}
         DOCS_REPO: ${{ inputs.docs-repo }}
-        FLATPAK_INDEX_TOKEN: ${{ inputs.token }}
+        TOKEN_INPUT: ${{ inputs.token }}
         MAX_ATTEMPTS: ${{ inputs.max-attempts }}
       run: |
         set -euo pipefail
+
+        # Preserve existing callers: an explicit token input wins. Otherwise
+        # use the org secret mapped into this action's environment by its caller.
+        FLATPAK_INDEX_TOKEN="${TOKEN_INPUT:-${FLATPAK_INDEX_TOKEN:-}}"
+        if [ -z "$FLATPAK_INDEX_TOKEN" ]; then
+          echo "::error::FLATPAK_INDEX_TOKEN is unavailable -- set the action environment from secrets.FLATPAK_INDEX_TOKEN or pass the token input" >&2
+          exit 1
+        fi
+        echo "::add-mask::$FLATPAK_INDEX_TOKEN"
 
         read -ra tag_args <<<"$TAGS"
         if [ "${#tag_args[@]}" -eq 0 ]; then
@@ -65,13 +74,9 @@ runs:
 
         # Auth problems are not races: fail on them at once, with the real
         # reason, instead of retrying MAX_ATTEMPTS times and blaming a
-        # concurrent writer. A caller whose repo cannot see the secret
-        # passes an empty string here.
+        # concurrent writer. Presence is checked above, but an expired or
+        # incorrectly scoped token still needs this permission check.
         export GIT_TERMINAL_PROMPT=0
-        if [ -z "$FLATPAK_INDEX_TOKEN" ]; then
-          echo "::error::token input is empty -- is FLATPAK_INDEX_TOKEN available to ${GITHUB_REPOSITORY}?" >&2
-          exit 1
-        fi
         can_push="$(curl -sS -w '\n%{http_code}' -H "Authorization: Bearer $FLATPAK_INDEX_TOKEN" \
           "https://api.github.com/repos/${DOCS_REPO}" \
           | python3 -c 'import json,sys

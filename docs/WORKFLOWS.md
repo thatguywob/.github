@@ -337,7 +337,7 @@ that `uses:` this with `secrets: inherit`.
 
 | Secret | Required | Default | When to change it |
 |---|---|---|---|
-| `FLATPAK_INDEX_TOKEN` | **yes** | — | Token allowed to push `tuna-os/docs` (the central index). Map it with `secrets: inherit` or explicitly. |
+| `FLATPAK_INDEX_TOKEN` | When `publish: true` | — | Organization secret allowed to push `tuna-os/docs` (the central index). Forward it with `secrets: inherit` or explicitly. Missing values fail before building. See [secret policy](../.github/SECRETS.md) for access and rotation. |
 
 **Usage.**
 

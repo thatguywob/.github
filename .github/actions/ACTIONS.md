@@ -90,7 +90,7 @@ Downstream workflows or composite actions reference these actions using:
 - **Inputs:**
   - `oci-dir` *(required)*: Path to local OCI layout directory containing `index.json`.
   - `repo-name` *(required)*: Target registry repository name (e.g. `tuna-os/tavern`).
-  - `token` *(required)*: GitHub token with write permissions to `docs-repo` (`FLATPAK_INDEX_TOKEN`).
+  - `token` *(optional)*: Compatibility override for the `FLATPAK_INDEX_TOKEN` environment variable; requires write permissions to `docs-repo`. See [secret policy](../SECRETS.md).
   - `index-file` *(optional, default: `static/flatpak/index/static`)*: Relative path to index in docs repo.
   - `registry` *(optional, default: `ghcr.io`)*: Container registry host.
   - `tags` *(optional, default: `latest`)*: Space-separated list of image tags.
@@ -100,11 +100,12 @@ Downstream workflows or composite actions reference these actions using:
   ```yaml
   - name: Publish Flatpak index
     uses: tuna-os/.github/.github/actions/publish-flatpak-index@main
+    env:
+      FLATPAK_INDEX_TOKEN: ${{ secrets.FLATPAK_INDEX_TOKEN }}
     with:
       oci-dir: oci/mandelbrot-oci-x86_64
       repo-name: tuna-os/mandelbrot
       tags: latest
-      token: ${{ secrets.FLATPAK_INDEX_TOKEN }}
   ```
 
 ---

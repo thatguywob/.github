@@ -121,6 +121,34 @@ baseline called for by
   .github/workflows`. The script and a ready-to-run workflow ship there and are
   copied in.
 
+### Action input security
+
+When passing user-controlled action inputs to shell commands, put expressions
+in step-level `env:` and expand quoted variables in `run:`. GitHub Actions
+substitutes `${{ }}` expressions into the script text before Bash parses it:
+`--tags ${{ inputs.tags }}` can turn input into shell code. Even wrapping the
+expression in double quotes is unsafe: a double quote in the input can end the
+quoted region.
+
+For a space-separated list, split the environment variable into a Bash array
+with `read -ra` and pass `"${tag_args[@]}"`; avoid unquoted expansion, which also
+performs pathname expansion. For example, inside a composite action:
+
+```yaml
+- name: Update tags
+  shell: bash
+  env:
+    TAGS: ${{ inputs.tags }}
+  run: |
+    read -ra tag_args <<<"$TAGS"
+    python3 update-index.py --tags "${tag_args[@]}"
+```
+
+Environment variables keep values as data; still validate them against the
+command's expected format. See
+[the `update-flatpak-index` action](.github/actions/update-flatpak-index/action.yml)
+for the complete command, empty-list check, and OCI tag validation.
+
 ## Getting help
 
 - Ask in the relevant issue or PR.

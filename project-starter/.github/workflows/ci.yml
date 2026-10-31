@@ -18,7 +18,9 @@ jobs:
   validate:
     runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Run the local-equivalent checks
         run: |
           # Install the project toolchain and just before enabling this template.
@@ -31,7 +33,9 @@ jobs:
   renovate-policy:
     runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Check Renovate automerge policy
         run: python3 scripts/check-renovate-automerge-policy.py renovate.json
 
@@ -41,15 +45,26 @@ jobs:
   workflow-permissions:
     runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Check workflow permissions
         run: python3 scripts/check-workflow-permissions.py .github/workflows
+
+  workflow-action-pins:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check workflow action pins
+        run: python3 scripts/check-workflow-action-pins.py .github/workflows
 
   # Make this the sole required branch-protection check. Add every mandatory
   # job to needs; optional E2E jobs must report success or skipped.
   required-checks:
     if: always()
-    needs: [validate, renovate-policy, workflow-permissions]
+    needs: [validate, renovate-policy, workflow-permissions, workflow-action-pins]
     runs-on: ubuntu-26.04
     steps:
       - name: Fail if a required job did not succeed

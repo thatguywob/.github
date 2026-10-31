@@ -1,6 +1,7 @@
 # Copy this file into <repo>/.github/workflows/ci.yml as the starting point for
-# a tunaOS repository's CI. Everything below the `on:` trigger is optional --
-# the one thing that is NOT optional is the top-level `permissions:` block.
+# a tunaOS repository's CI. Adapt the triggers and build commands.
+# Keep the top-level permissions baseline and full commit pins.
+# See workflow-templates/README.md for the security review checklist.
 #
 # A missing permissions block makes the workflow inherit the repository's
 # configured default token scope, which is almost always broader than the jobs
@@ -37,7 +38,9 @@ jobs:
     name: Build and test
     runs-on: ubuntu-26.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Build and test
         run: |
           # Install your project's toolchain here, then run:

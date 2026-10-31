@@ -33,6 +33,34 @@ before picking a repo. Several `tuna-os` repos do **not** default to `main` — 
 document lists each repo's real default branch. This table lags, because new
 repositories are added regularly; [`ROADMAP-INDEX.md`](ROADMAP-INDEX.md) is kept current.
 
+## Repository lifecycle
+
+- **Active:** The repository accepts ongoing development. On creation or
+  reactivation, describe its purpose and contribution entry points in its README,
+  and refresh `tuna-os/.github/ROADMAP-INDEX.md` using
+  `python3 scripts/roadmap-index.py --write` from that checkout. The inventory
+  resolves each repository's actual default branch.
+- **Deprecated:** Development is winding down or moving to a successor. Add a
+  prominent notice to the repository's README explaining what is deprecated,
+  linking the successor and migration guidance (or stating there is no successor),
+  and linking the retirement issue that records remaining work. Keep the repo in
+  `ROADMAP-INDEX.md` while it is non-archived; update its explanatory prose to
+  point to the retirement issue rather than requesting a roadmap for retired work.
+- **Archived:** A maintainer archives the repository on GitHub when retirement
+  work is complete. Before it becomes read-only, update its README with the
+  archival reason, successor or historical-reference purpose, and support status.
+  After archiving, regenerate `ROADMAP-INDEX.md` to remove it from the active
+  table and coverage counts; update the manually maintained scope notes and
+  missing-roadmap prose as well. Preserve historical links rather than treating
+  archival as deletion.
+
+At each transition, update affected links and status descriptions in the org
+profile (`tuna-os/.github/profile/README.md`), other READMEs, and any ROADMAP.md
+that tracks the repository or repeats the inventory's coverage count. Check
+org automation that names the repository explicitly; inventory regeneration
+does not update those lists. Deprecation alone does not remove a repo from
+coverage, and historical read-only repositories use the archived state.
+
 ## Getting started
 
 1. **Pick a repository and open an issue first** — describe the change and

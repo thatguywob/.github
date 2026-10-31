@@ -41,7 +41,7 @@ Inputs for reusable workflows and composite actions are a public contract becaus
 ## Key Documents
 
 - [`AGENTS.md`](AGENTS.md) — Maintainer and agent guide for blast radius, security rules, and policy checks
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — Contribution workflow, DCO sign-off requirements, and sync rules for shared scripts
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — Contribution workflow, [repository lifecycle procedures](CONTRIBUTING.md#repository-lifecycle), DCO sign-off requirements, and sync rules for shared scripts
 - [`docs/WORKFLOWS.md`](docs/WORKFLOWS.md) — Reference and adoption guide for reusable workflows
 - [`docs/SCRIPTS.md`](docs/SCRIPTS.md) — Reference guide for CI validation scripts and project-starter sync
 - [`.github/actions/ACTIONS.md`](.github/actions/ACTIONS.md) — Index of reusable composite actions

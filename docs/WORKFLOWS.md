@@ -33,6 +33,10 @@ everywhere at once.
 
 ## Quick reference
 
+The workflows pinned in #163 use Ubuntu 24.04 LTS (`ubuntu-24.04`). Runner
+version upgrades should be explicit changes reviewed through pull requests.
+Other workflows already use versioned labels managed by Renovate.
+
 | Workflow | File | What it does | Required inputs |
 |---|---|---|---|
 | CI Contract Verification | [`reusable-ci-contract.yml`](../.github/workflows/reusable-ci-contract.yml) | Asserts every green-criteria gate is wired to a reachable workflow | none (all optional) |
@@ -184,7 +188,7 @@ their own `on:` trigger and become a thin job.
 | `budget` | string | no | `""` | Fallback budget when `budget-file` does not exist. Empty means "read the file only". |
 | `node-version` | string | no | `"24"` | Node version the linter runs on. |
 | `run-tests` | boolean | no | `true` | Run the linter's own test suite. Set `false` to skip. |
-| `runs-on` | string | no | `ubuntu-latest` | Runner label for the job. |
+| `runs-on` | string | no | `ubuntu-24.04` | Runner label for the job. |
 | `checkout-ref` | string | no | `""` | Ref to check out. Empty means the ref that triggered the caller. |
 
 **Usage.**

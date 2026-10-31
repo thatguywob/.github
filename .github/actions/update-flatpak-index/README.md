@@ -68,3 +68,17 @@ repo's committed copy diverges from canonical) is implemented in
 updated for the migrations above; see the tracking issue for the exact
 correction needed (it's a `.github/workflows/**` edit, so it can only ship
 via that issue, not a PR from this agent).
+
+## Tests
+
+Run the action's unit and CLI fixture tests from the repository root:
+
+```sh
+python3 .github/actions/update-flatpak-index/test_update_index.py
+```
+
+The tests use temporary OCI layouts and index files with Python's standard
+library; they do not publish images or contact a registry. The
+[Script self-tests workflow](../../workflows/script-self-tests.yml) runs this
+suite alongside the repository's existing Python and Node self-tests on
+relevant pull requests and pushes to `main`, or through `workflow_dispatch`.

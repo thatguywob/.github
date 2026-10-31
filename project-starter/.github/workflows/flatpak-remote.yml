@@ -11,7 +11,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 concurrency:
   group: flatpak-remote-${{ github.ref }}
@@ -23,15 +22,20 @@ env:
 
 jobs:
   publish:
+    permissions:
+      contents: read
+      packages: write
     if: github.repository == '<owner>/<repository>'
     runs-on: ubuntu-26.04
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
       options: --privileged
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Build Flatpak
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        uses: flatpak/flatpak-github-actions/flatpak-builder@79327416609af08178ad73b352877e51450790b3 # v6
         with:
           manifest-path: <path/to/manifest.json>
           build-bundle: false
@@ -39,8 +43,8 @@ jobs:
       - name: Export OCI and publish
         run: |
           flatpak build-bundle --oci --arch=x86_64 repo app.oci "$APP_ID"
-          echo "${{ env.GITHUB_TOKEN }}" | skopeo login ghcr.io -u "${{ github.actor }}" --password-stdin
-          skopeo copy "oci:app.oci" "docker://$OCI_IMAGE:${{ github.ref_name }}"
+          echo "$GITHUB_TOKEN" | skopeo login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          skopeo copy "oci:app.oci" "docker://$OCI_IMAGE:$GITHUB_REF_NAME"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update remote index

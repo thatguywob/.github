@@ -126,6 +126,21 @@ class TestCheckFile(unittest.TestCase):
             self.assertEqual(check.check_file(Path(d) / "ci.yml"), [])
 
 
+class TestDistributedTemplates(unittest.TestCase):
+    def test_distributed_templates_have_immutable_action_pins(self):
+        root = SCRIPT_DIR.parent
+        for directory in (root / "workflow-templates", root / "project-starter/.github/workflows"):
+            for path in check.find_workflow_files(directory):
+                with self.subTest(path=path):
+                    self.assertEqual(check.check_file(path), [])
+
+    def test_starter_checker_matches_canonical_source(self):
+        self.assertEqual(
+            SCRIPT_PATH.read_bytes(),
+            (SCRIPT_DIR.parent / "project-starter/scripts/check-workflow-action-pins.py").read_bytes(),
+        )
+
+
 class TestMain(unittest.TestCase):
     def _write_dir(self, **files):
         d = tempfile.mkdtemp()

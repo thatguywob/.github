@@ -26,17 +26,16 @@ A curated, copyable baseline for TunaOS projects. It distils the practices that 
 | `renovate.json` | Automated dependency, action, digest, and pin updates | organisation default, tunaOS |
 | `ci.yml` | Least-privilege checks, cancellation, and a branch-protection sentinel | bootc-migrate |
 | `scripts/check-workflow-permissions.py` | CI gate: fails the build if any workflow omits a top-level `permissions:` block, so jobs inherit the least-privilege scope (tuna-os/.github#155) | tuna-os/.github#155 |
+| `scripts/check-workflow-action-pins.py` | CI gate: rejects mutable action and reusable workflow references | tuna-os/.github#285 |
 | `scripts/check-renovate-automerge-policy.py` | CI gate: fails the build if `renovate.json` would automerge a major/minor update, even via rule layering (tuna-os/.github#12) | tuna-os/tunaOS#1636 |
 | `flatpak-remote.yml` | Build an OCI Flatpak and update a hosted remote index | tuna-os/docs |
 | `docs-artifacts.yml` | Turn validated screenshots or walkthroughs into versioned docs | tunaOS → docs |
 | `release.yml` + `release-artifacts.json` | Publish a release, then fail closed unless its tag and integrity evidence verify | organisation release policy |
 
- Both `scripts/check-*.py` gates are byte-identical copies of the canonical
+ The `scripts/check-*.py` gates are byte-identical copies of the canonical
  scripts in [`tuna-os/.github/scripts/`](https://github.com/tuna-os/.github/tree/main/scripts).
- They are fixed in `tuna-os/.github/scripts/` and re-copied here, so new repos
- start from the corrected version — see the
- [canonical-sources section of CONTRIBUTING.md](../CONTRIBUTING.md#shared-scripts-and-their-canonical-sources)
- for the full table and the sync process.
+ Update the canonical scripts first. Copy them here in the same commit.
+ See the [sync process](../CONTRIBUTING.md#shared-scripts-and-their-canonical-sources).
 
 ## Release verification profile
 

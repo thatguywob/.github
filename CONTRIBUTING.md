@@ -121,6 +121,11 @@ baseline called for by
   .github/workflows`. The script and a ready-to-run workflow ship there and are
   copied in.
 
+Use the [workflow security checklist](workflow-templates/README.md) when you
+copy or change a workflow. It covers action pins, job permissions, and review
+evidence. A template is copied into a repository; it does not change existing
+workflows when the template changes.
+
 ## Getting help
 
 - Ask in the relevant issue or PR.

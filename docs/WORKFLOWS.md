@@ -331,7 +331,7 @@ that `uses:` this with `secrets: inherit`.
 | `source-repo` | string | no | `''` | `owner/repo` to build from when the source is **not** the calling repo (e.g. republishing Ghostty from `tuna-os/blueshell`). Empty checks out the caller at the calling ref. |
 | `source-ref` | string | no | `''` | Branch/tag/SHA within `source-repo`. Empty means that repo's default branch. Ignored when `source-repo` is empty. |
 | `attach-bundles` | boolean | no | `false` | Build a `.flatpak` bundle per arch and attach it to the GitHub release on tag push. |
-| `generate-cargo-sources` | boolean | no | `false` | Run `flatpak-cargo-generator` against `cargo-lock-path` before building. |
+| `generate-cargo-sources` | boolean | no | `false` | Run `flatpak-cargo-generator` against `cargo-lock-path` before building. The generator is pinned to a reviewed upstream commit and SHA-256-verified before it runs; bump both values in the step together. |
 | `cargo-lock-path` | string | no | `Cargo.lock` | Cargo lock file path for the generator. |
 | `cargo-sources-output` | string | no | `build-aux/cargo-sources.json` | Output path for the generated cargo sources. |
 | `publish` | boolean | no | `true` | Push to GHCR and update the index. Set `false` for build-only validation (e.g. on `pull_request`). |

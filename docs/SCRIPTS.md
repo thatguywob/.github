@@ -4,7 +4,7 @@ Reference guide for the CI validation scripts in `scripts/` (and their synchroni
 
 These scripts run in CI workflows across `tuna-os/.github` and downstream organization repositories to enforce security boundaries, dependency update safety, least-privilege workflow permissions, and supply chain integrity.
 
-All validation scripts are intentionally dependency-free (written using Python standard library modules or Node standard library) so that they run on standard GitHub Actions runners (`ubuntu-latest` / `ubuntu-24.04`) without requiring `pip install`, `npm install`, or external dependencies.
+The established validation scripts below are dependency-free (written using Python standard library modules or Node standard library). The separate experimental [enrollment report](../organization/README.md) requires PyYAML and jsonschema; it is read-only and does not impose a fleet-wide gate.
 
 ---
 
@@ -33,6 +33,7 @@ All validation scripts are intentionally dependency-free (written using Python s
 | [`arch-plan.py`](#4-arch-planpy) | Validates architecture input matrix (`x86_64`, `aarch64`) for Flatpak packaging | `scripts/` | `arch-plan-check.yml` |
 | [`auto-qa-tuner.mjs`](#5-auto-qa-tunermjs) | Self-tunes QA gate threshold parameters based on workflow outcome observations | `scripts/` | `auto-qa-tuner.yml` |
 | [`roadmap-index.py`](#6-roadmap-indexpy) | Verifies and regenerates `ROADMAP-INDEX.md` inventory against live GitHub API data | `scripts/` | `roadmap-index-automation.yml` |
+| [`enrollment-report.py`](../organization/README.md) | Experimental read-only policy conformance report over local checkouts | `scripts/` | `enrollment-prototype-test.yml` (tests only) |
 
 ---
 

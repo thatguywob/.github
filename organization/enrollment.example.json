@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "repositories": [
+    {"name": "Tavern", "profiles": ["workflow-permissions"]},
+    {"name": "tunaOS", "profiles": ["workflow-permissions", "ci-contract"]},
+    {"name": ".github", "profiles": ["workflow-permissions"]}
+  ]
+}

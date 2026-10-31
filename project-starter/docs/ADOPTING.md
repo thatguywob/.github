@@ -4,7 +4,7 @@
 
 Use a Justfile as the public local interface. `just check` must run the same fast checks that CI runs. Keep `e2e`, releases, and screenshot capture explicit or scheduled when they require privileged hardware, long execution, or secrets.
 
-Enable the CI template only after replacing the checkout action version with the organisation’s current pinned policy and installing the project's tools. Configure branch protection to require **only** `CI / required-checks`; update its `needs` list whenever a new required job is added.
+The CI template uses full commit pins. Keep these pins when you install the project's tools. Run both workflow checks before you enable CI; see the [security checklist](https://github.com/tuna-os/.github/blob/main/workflow-templates/README.md). Configure branch protection with **only** `CI / required-checks` as the required check. Update its `needs` list for each new required job.
 
 ## Dependency updates
 

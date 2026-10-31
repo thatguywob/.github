@@ -168,12 +168,24 @@ jobs:
 
       - name: Generate offline cargo sources
         if: inputs.generate-cargo-sources
+        # Pinned to a reviewed upstream commit and verified against a
+        # repo-owned SHA-256 before Python runs it (tuna-os/.github#97): this
+        # step runs in the privileged build container, so it must never execute
+        # content fetched from a mutable branch. To bump, review the upstream
+        # diff, then update both values together.
+        env:
+          GENERATOR_COMMIT: 41c20aa10819cdb2a4f3ca171758a96d1955c018
+          GENERATOR_SHA256: 0a2db6be87d75910facef28ab46d4d6460802e8419ab850d0caa6a364d26b380
+          CARGO_LOCK_PATH: ${{ inputs.cargo-lock-path }}
+          CARGO_SOURCES_OUTPUT: ${{ inputs.cargo-sources-output }}
         run: |
-          pip3 install --break-system-packages aiohttp toml || pip3 install aiohttp toml
+          set -euo pipefail
+          pip3 install --break-system-packages aiohttp tomlkit || pip3 install aiohttp tomlkit
           curl -fsSLo /tmp/flatpak-cargo-generator.py \
-            https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/master/cargo/flatpak-cargo-generator.py
-          python3 /tmp/flatpak-cargo-generator.py "${{ inputs.cargo-lock-path }}" \
-            -o "${{ inputs.cargo-sources-output }}"
+            "https://raw.githubusercontent.com/flatpak/flatpak-builder-tools/${GENERATOR_COMMIT}/cargo/flatpak-cargo-generator.py"
+          echo "${GENERATOR_SHA256}  /tmp/flatpak-cargo-generator.py" | sha256sum -c -
+          python3 /tmp/flatpak-cargo-generator.py "$CARGO_LOCK_PATH" \
+            -o "$CARGO_SOURCES_OUTPUT"
 
       - name: Build
         # `uses:` can't take an expression (actionlint: "context inputs is

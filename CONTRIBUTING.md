@@ -45,6 +45,44 @@ repositories are added regularly; [`ROADMAP-INDEX.md`](ROADMAP-INDEX.md) is kept
 4. **Sign your commits** — every commit must be DCO-signed-off
    (`git commit -s`). This certifies you wrote the change and can license it.
 
+## Working on this repository
+
+For `tuna-os/.github` itself, use a Linux environment with Git, Bash, Python
+3.11+, and Node.js 24 (for `ste-lint`). Install `actionlint` and `shellcheck`
+with your package manager; use the GitHub CLI (`gh`) to inspect failed runs
+and open PRs. Run checks from the repository root; there is no root `justfile`.
+
+```bash
+actionlint .github/workflows/*.yml
+python3 scripts/check-renovate-automerge-policy.py renovate.json
+python3 scripts/check-workflow-permissions.py .github/workflows
+python3 scripts/test-renovate-automerge-policy.py
+node .github/actions/ste-lint/ste-lint.test.mjs
+```
+
+For a changed shell script, run `bash -n path/to/script.sh` and
+`shellcheck path/to/script.sh`. `actionlint` checks workflows, not composite
+`action.yml` files: copy a changed Bash `run: |` body to a temporary `.sh` file
+(without YAML indentation), replace GitHub expressions with test values, and
+run the same checks. Supply inputs as environment variables, including empty,
+space-containing, and quoted values. Run the action's underlying script tests
+where available; static checks alone do not exercise GitHub's runner context.
+
+- **New reusable workflow:** declare `workflow_call` and explicit permissions,
+  run `actionlint`, then test a caller against your fork's branch as described
+  in [Testing changes before merge](docs/WORKFLOWS.md#testing-changes-before-merge).
+- **Action input change:** check existing callers and defaults, test both
+  omitted and explicit inputs, and exercise a caller against the changed
+  action ref. See the [action reference](.github/actions/ACTIONS.md). Keep
+  shell inputs in `env:`, rather than interpolating them into script text.
+- **Shared PR template:** preview `.github/PULL_REQUEST_TEMPLATE.md` as
+  Markdown and check links and checkboxes before opening the PR.
+
+For other script checks, see [docs/SCRIPTS.md](docs/SCRIPTS.md). Read
+[AGENTS.md](AGENTS.md) before editing shared defaults: templates are inherited
+across the org, and workflow/action callers using `@main` receive changes on
+merge.
+
 ## PR checklist
 
 - [ ] Commit messages are signed off (`git commit -s`)

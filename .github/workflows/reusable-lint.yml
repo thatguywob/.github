@@ -50,15 +50,17 @@ jobs:
         if: matrix.check == 'yamllint'
         run: |
           echo "==> Running yamllint..."
-          CFG_ARG=""
-          if [[ -f .yamllint.yml ]] || [[ -f .yamllint.yaml ]]; then
-            CFG_ARG="-c .yamllint.yml"
+          CFG_ARGS=()
+          if [[ -f .yamllint.yml ]]; then
+            CFG_ARGS=(-c .yamllint.yml)
+          elif [[ -f .yamllint.yaml ]]; then
+            CFG_ARGS=(-c .yamllint.yaml)
           fi
           find . \( -name "*.yaml" -o -name "*.yml" \) -type f \
             -not -path './.build/*' \
             -not -path './vendor/*' \
             -not -path './_upstream-snapshots/*' \
-            -exec yamllint $CFG_ARG {} +
+            -exec yamllint "${CFG_ARGS[@]}" {} +
 
       - name: Validate JSON files
         if: matrix.check == 'json-validate'
@@ -72,10 +74,15 @@ jobs:
 
       - name: Run actionlint
         if: matrix.check == 'actionlint'
-        continue-on-error: true
         run: |
           echo "==> Running actionlint on workflows..."
-          actionlint .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null || true
+          shopt -s nullglob
+          workflows=(.github/workflows/*.yml .github/workflows/*.yaml)
+          if ((${#workflows[@]} == 0)); then
+            echo "No workflow files found; skipping actionlint"
+            exit 0
+          fi
+          actionlint "${workflows[@]}"
 
       - name: Check Justfile formatting
         if: matrix.check == 'justfmt'

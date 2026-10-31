@@ -1,0 +1,5 @@
+# GitHub supports this hosted image; actionlint 1.7.12 does not list it yet.
+# https://github.com/actions/runner-images/blob/main/README.md
+self-hosted-runner:
+  labels:
+    - ubuntu-26.04

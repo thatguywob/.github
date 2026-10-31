@@ -261,7 +261,7 @@ jobs:
           dir="oci-${arch}"
           [ -d "$dir" ] || { echo "::error::missing $dir"; exit 1; }
           version_tag=""
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
             version_tag="${{ github.ref_name }}"
           fi
           skopeo copy "oci:${dir}" "docker://${{ inputs.registry }}/${{ inputs.repo-name }}:latest-${arch}"

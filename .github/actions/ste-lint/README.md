@@ -5,10 +5,13 @@ Simplified Technical English — with a per-repo budget.
 
 Most repos should call the reusable workflow rather than this action directly:
 
+Cross-repository callers use reviewed complete commit SHAs and keep pins current
+through Renovate; see the [adoption policy](../../../docs/WORKFLOWS.md#adopting-a-workflow).
+
 ```yaml
 jobs:
   ste:
-    uses: tuna-os/.github/.github/workflows/ste-lint.yml@main
+    uses: tuna-os/.github/.github/workflows/ste-lint.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 ## What it checks

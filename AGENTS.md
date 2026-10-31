@@ -3,7 +3,7 @@
 The **org defaults repo**. Nothing here builds a product; everything here
 applies to other repositories.
 
-## A change here lands everywhere at once
+## How changes propagate
 
 Four different mechanisms, with different blast radii:
 
@@ -11,13 +11,21 @@ Four different mechanisms, with different blast radii:
 |---|---|
 | `.github/ISSUE_TEMPLATE/`, `PULL_REQUEST_TEMPLATE.md`, `DISCUSSION_TEMPLATE/`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md` | Every org repo that does not ship its own copy — immediately, with no merge in that repo |
 | `profile/README.md` | The organisation's public landing page |
-| `.github/workflows/*.yml` with `on: workflow_call`, and `.github/actions/*` | Every repo that `uses:` them — and callers pin `@main`, so a merge is live for them |
+| `.github/workflows/*.yml` with `on: workflow_call`, and `.github/actions/*` | Cross-repository callers pin a complete commit SHA and adopt changes through reviewed pin updates; legacy `@main` callers still receive merges immediately |
 | `project-starter/` | A template **copied** into new repos; not used by this repo |
 
-There is no version to hold a consumer back and no way to roll back except
-another commit. `publish-flatpak.yml`'s inputs and each action's `inputs:`
-block are a public API: renaming one, or changing what a default means, breaks
-callers silently at their next run.
+Cross-repository workflow and action references must use complete commit SHAs
+(#285/#288/#335; migration tracker #152), with Renovate keeping pins current.
+The existing `--self-repo` checker exception applies only to references into
+the repository being checked, not to every first-party repository. It remains
+unchanged. A pinned workflow can still contain mutable nested references;
+pinning its caller alone does not make the entire execution graph immutable.
+
+Some existing callers still track `@main` until migrated, so a merge can affect
+them immediately. SHA-pinned callers receive the workflow revision when their
+pin update lands and can roll it back by restoring a reviewed prior SHA.
+`publish-flatpak.yml`'s inputs and each action's `inputs:` block remain public
+APIs: check callers before renaming an input or changing what a default means.
 
 ## Don't put an input back into a script body
 

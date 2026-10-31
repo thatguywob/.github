@@ -9,8 +9,11 @@ each independently drifting).
 Replace a repo's local `python3 .github/scripts/update-index.py ...` call
 with:
 
+Cross-repository callers use reviewed complete commit SHAs and keep pins current
+through Renovate; see the [adoption policy](../../../docs/WORKFLOWS.md#adopting-a-workflow).
+
 ```yaml
-- uses: tuna-os/.github/.github/actions/update-flatpak-index@main
+- uses: tuna-os/.github/.github/actions/update-flatpak-index@fded0603d7e383990e8259141419fe6c1d641f41 # main
   with:
     oci-dir: oci/mandelbrot-oci-x86_64
     index-file: index-repo/static/flatpak/index/static

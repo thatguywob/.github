@@ -4,14 +4,15 @@ Reference documentation for the reusable (`workflow_call`) workflows that live i
 [`.github/workflows/`](../.github/workflows) and are adopted by other
 tuna-os repositories.
 
-This is the org's central defaults repo. A reusable workflow here is a **public
-API**: downstream repos call it by pinning `@main`, so a merge is live for every
-caller at once — there is no version to hold a consumer back and no way to roll
-back except another commit. Treat every input, default, and behaviour change as
-breaking until you have confirmed it does not break a caller.
+This is the org's central defaults repo. Reusable workflows are **public APIs**.
+Cross-repository workflow and action references must use complete immutable
+commit SHAs, kept current through Renovate (#285/#288/#335; migration tracker
+[#152](https://github.com/tuna-os/.github/issues/152)). A caller adopts a workflow
+revision when its pin update lands; a rollback restores a reviewed earlier SHA.
+Legacy callers still tracking `@main` receive merges immediately until migrated.
+Check callers before changing an input, default, or behaviour.
 
-See [`AGENTS.md`](../AGENTS.md) for how a change to any of these paths lands
-everywhere at once.
+See [`AGENTS.md`](../AGENTS.md) for the different propagation mechanisms.
 
 ## Contents
 
@@ -56,13 +57,25 @@ type; `required: true` inputs must be supplied by every caller.
 
 Every reusable workflow is called as a **job**, not a step. The caller keeps its
 own `on:` trigger (the publish cadence and event type differ per repo) and
-becomes a thin job that `uses:` the workflow with `@main`:
+becomes a thin job that `uses:` the workflow at a reviewed full commit SHA:
 
 ```yaml
 jobs:
   ci:
-    uses: tuna-os/.github/.github/workflows/reusable-lint.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-lint.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
+
+The examples use the reviewed `main` revision `fded0603d7e383990e8259141419fe6c1d641f41`.
+Keep pins current through Renovate; the `# main` comment records the tracked
+branch, not a mutable execution ref. Do not copy an old pin without reviewing
+the revision and available security updates.
+
+The existing pin-checker `--self-repo` exemption covers only references into
+the repository being checked. It is not a blanket exemption for first-party
+org code. This documentation change does not alter that exception. Existing
+same-repository nested `@main` references can still move independently of a
+consumer's pinned workflow; a top-level pin is not a guarantee that all
+transitive action references are immutable.
 
 Two things are shared and two are per-caller:
 
@@ -71,10 +84,9 @@ Two things are shared and two are per-caller:
 - **Per-caller:** the `on:` trigger block, the `permissions:` block, and
   `secrets:` mapping (see the per-workflow sections for what each needs).
 
-Because callers pin `@main`, you cannot point a caller at a feature branch with
-`@my-branch` and expect it to stay there — that ref goes away when the branch is
-deleted. Test against your branch (see [Testing changes before merge](#testing-changes-before-merge)),
-then merge.
+Do not leave production callers on feature-branch refs that can change or be
+deleted. Test a candidate commit (see [Testing changes before merge](#testing-changes-before-merge)),
+then update the caller to the reviewed merged commit SHA.
 
 ## Workflows
 
@@ -99,7 +111,7 @@ turns a list of desired CI properties into something CI proves.
 ```yaml
 jobs:
   ci-contract:
-    uses: tuna-os/.github/.github/workflows/reusable-ci-contract.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-ci-contract.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 **Notes.** Exits `0` and skips if the criteria file is absent; exits `1` if the
@@ -128,7 +140,7 @@ fork case.
 ```yaml
 jobs:
   fork-safety:
-    uses: tuna-os/.github/.github/workflows/reusable-fork-safety.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-fork-safety.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 **Notes.** A step is considered guarded if the job `if`, the step `if`, its
@@ -155,12 +167,12 @@ check does not cancel the others.
 ```yaml
 jobs:
   lint:
-    uses: tuna-os/.github/.github/workflows/reusable-lint.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-lint.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 
 # Run only a subset, e.g. shellcheck and actionlint:
 jobs:
   lint:
-    uses: tuna-os/.github/.github/workflows/reusable-lint.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-lint.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       checks: '["shellcheck", "actionlint"]'
 ```
@@ -197,7 +209,7 @@ their own `on:` trigger and become a thin job.
 ```yaml
 jobs:
   ste:
-    uses: tuna-os/.github/.github/workflows/ste-lint.yml@main
+    uses: tuna-os/.github/.github/workflows/ste-lint.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 See [`.github/actions/ste-lint/README.md`](../.github/actions/ste-lint/README.md)
@@ -226,7 +238,7 @@ supply-chain security analysis and uploads the result to code scanning.
 ```yaml
 jobs:
   scorecard:
-    uses: tuna-os/.github/.github/workflows/reusable-scorecard.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-scorecard.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 **Notes.** The job grants `security-events: write`, `id-token: write`,
@@ -252,7 +264,7 @@ welcome comment, once per author per repo. Bots (anything ending in `[bot]`,
 ```yaml
 jobs:
   greet:
-    uses: tuna-os/.github/.github/workflows/reusable-first-contributor.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-first-contributor.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 **Notes.** The job needs `issues: write` and `pull-requests: write`; the caller
@@ -284,7 +296,7 @@ summary and as annotations, plus a PR comment when permissions allow.
 ```yaml
 jobs:
   nudges:
-    uses: tuna-os/.github/.github/workflows/reusable-pr-nudges.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-pr-nudges.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 **Notes.** The job is disabled for drafts, `renovate[bot]`, and `dependabot[bot]`
@@ -305,7 +317,7 @@ once they are labelled `help wanted` or `good first issue`.
 ```yaml
 jobs:
   help-wanted:
-    uses: tuna-os/.github/.github/workflows/reusable-add-help-wanted.yml@main
+    uses: tuna-os/.github/.github/workflows/reusable-add-help-wanted.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
 ```
 
 **Notes.** The job needs `issues: write`. It runs with `continue-on-error` so a
@@ -349,7 +361,7 @@ that `uses:` this with `secrets: inherit`.
 ```yaml
 jobs:
   publish:
-    uses: tuna-os/.github/.github/workflows/publish-flatpak.yml@main
+    uses: tuna-os/.github/.github/workflows/publish-flatpak.yml@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       app-id: org.tunaos.finupdate
       manifest-path: build-aux/org.tunaos.finupdate.json
@@ -378,7 +390,7 @@ jobs:
 | Do | Avoid |
 |---|---|
 | Call a reusable workflow as a **job** (`jobs.x: uses:`). | Calling it as a **step** — `workflow_call` jobs cannot run inside another job's `steps:`. |
-| Pin `@main`; let the org own versioning. | Pinning a SHA or a branch name that will be deleted. |
+| Pin cross-repository workflows/actions to complete commit SHAs; keep pins current through Renovate. | Mutable branches/tags, including first-party `@main` outside the same-repository exception; stale pins with no update process. |
 | Keep the `on:` trigger and `permissions:` on the caller. | Moving triggers into the reusable workflow — the org workflow has no trigger of its own by design. |
 | Map secrets explicitly or use `secrets: inherit`. | Relying on implicit secret availability; fork runs have empty secrets. |
 | Change a default only after checking callers (`git grep` the org for the workflow). | Renaming an input or changing what a default means — callers break silently at their next run. |
@@ -387,8 +399,10 @@ jobs:
 
 ## Testing changes before merge
 
-Callers pin `@main`, so **a merge is live for every caller immediately**. Do not
-merge unverified. Two complementary strategies:
+Do not merge unverified: legacy `@main` callers receive changes immediately,
+and SHA-pinned callers receive workflow revisions through pin updates. Existing
+same-repository mutable nested references remain live under the documented
+exception. Two complementary strategies:
 
 **1. Test the underlying tooling locally.** Most reusable workflows are thin
 wrappers; verify the thing they actually run before touching the `uses:` line.
@@ -406,23 +420,26 @@ wrappers; verify the thing they actually run before touching the `uses:` line.
 - `publish-flatpak`: run with `publish: false` for a build-only validation that
   never touches GHCR or the index.
 
-**2. Exercise the real workflow from your branch.** Because callers pin `@main`,
-a PR to `tuna-os/.github` runs the *existing* workflow, not your edited one. To
-see your change execute against a real event:
+**2. Exercise the candidate workflow commit.** A normal PR check does not by
+itself prove that a reusable workflow's edited body executed: an existing
+caller still points at its configured ref. To exercise the candidate:
 
-1. Push your branch to your fork: `git push -u origin guide/workflow-inputs-docs`.
-2. In your fork, add a temporary caller that points at your branch ref:
+1. Push the candidate commit to your fork.
+2. In a test caller, reference its full SHA (replace the placeholders):
    ```yaml
    jobs:
      test:
-       uses: <your-fork>/.github/.github/workflows/reusable-lint.yml@<your-branch>
+       uses: <your-fork>/.github/.github/workflows/reusable-lint.yml@<full-candidate-commit-sha>
    ```
-3. Trigger it (`workflow_dispatch`) and observe. Only after it behaves as
-   intended do you merge to `main`.
+3. Trigger the caller on a supported event and inspect the result. For manual
+   testing, add `workflow_dispatch` to the caller, not the reusable workflow.
+4. After review and merge, update production callers to the reviewed merged
+   commit SHA, not the temporary fork ref.
 
 For composite actions a reusable workflow depends on (e.g. `ste-lint` and
-`publish-flatpak-index`, both referenced at `@main` from within these
-workflows), the same branch-ref trick applies to the action's own caller.
+`publish-flatpak-index`), ensure the test actually references the candidate
+action SHA too. Existing same-repository `@main` references otherwise run
+that branch's action code, not necessarily the edited candidate.
 
 ## Troubleshooting
 

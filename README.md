@@ -26,10 +26,10 @@ Changes in this repository reach other `tuna-os` repositories through four mecha
 |---|---|---|
 | **Immediate inheritance** | `.github/ISSUE_TEMPLATE/`, `.github/PULL_REQUEST_TEMPLATE.md`, `DISCUSSION_TEMPLATE/`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md` | Applied automatically by GitHub to every organization repository that does not define its own copy |
 | **Organization profile** | `profile/README.md` | Rendered directly on [`github.com/tuna-os`](https://github.com/tuna-os) |
-| **Opt-in live references (`@main`)** | `.github/workflows/*.yml` (`workflow_call`), `.github/actions/*`, `default.json` | Active on the next run for every repository that references them via `uses: tuna-os/.github/...@main` or `"extends": ["local>tuna-os/.github"]` |
+| **Opt-in shared code and policy** | `.github/workflows/*.yml` (`workflow_call`), `.github/actions/*`, `default.json` | Cross-repository workflow/action callers pin complete commit SHAs and receive revisions through pin updates; legacy `@main` callers still receive merges immediately. The Renovate preset `"extends": ["local>tuna-os/.github"]` continues to track shared policy. |
 | **Copied templates** | `project-starter/`, `workflow-templates/`, `scripts/check-*.py` | Copied when scaffolding a new repository or adopting shared policy checks |
 
-Inputs for reusable workflows and composite actions are a public contract because callers pin `@main`. Read [`AGENTS.md`](AGENTS.md) before you change workflow inputs, action interfaces, or shared scripts.
+Inputs for reusable workflows and composite actions are a public contract. Cross-repository references must use complete commit SHAs; keep them current through Renovate. The pin checker retains its same-repository exception, not an organization-wide exception. See [workflow adoption](docs/WORKFLOWS.md#adopting-a-workflow) and read [`AGENTS.md`](AGENTS.md) before changing workflow inputs, action interfaces, or shared scripts.
 
 ## When to Edit Here
 

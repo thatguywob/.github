@@ -28,8 +28,11 @@ release just silently doesn't show up.
 
 Replace the whole clone → update-index.py → commit → push block with:
 
+Cross-repository callers use reviewed complete commit SHAs and keep pins current
+through Renovate; see the [adoption policy](../../../docs/WORKFLOWS.md#adopting-a-workflow).
+
 ```yaml
-- uses: tuna-os/.github/.github/actions/publish-flatpak-index@main
+- uses: tuna-os/.github/.github/actions/publish-flatpak-index@fded0603d7e383990e8259141419fe6c1d641f41 # main
   with:
     oci-dir: oci/mandelbrot-oci-x86_64
     repo-name: tuna-os/mandelbrot

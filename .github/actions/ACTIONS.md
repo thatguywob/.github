@@ -2,10 +2,10 @@
 
 Index of reusable composite actions hosted in `.github/actions/` in `tuna-os/.github`.
 
-Downstream workflows or composite actions reference these actions using:
+Cross-repository callers pin a complete commit SHA and keep it current through Renovate, following the [workflow adoption policy](../../docs/WORKFLOWS.md#adopting-a-workflow). The examples use reviewed revision `fded0603d7e383990e8259141419fe6c1d641f41`; the existing same-repository pin-checker exception is unchanged.
 
 ```yaml
-- uses: tuna-os/.github/.github/actions/<action-name>@main
+- uses: tuna-os/.github/.github/actions/<action-name>@fded0603d7e383990e8259141419fe6c1d641f41 # main
   with:
     ...
 ```
@@ -42,7 +42,7 @@ Downstream workflows or composite actions reference these actions using:
   ```yaml
   - name: Plan build architectures
     id: arch-plan
-    uses: tuna-os/.github/.github/actions/arch-plan@main
+    uses: tuna-os/.github/.github/actions/arch-plan@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       archs: '["x86_64", "aarch64"]'
   ```
@@ -59,7 +59,7 @@ Downstream workflows or composite actions reference these actions using:
 - **Usage:**
   ```yaml
   - name: Check CI contracts
-    uses: tuna-os/.github/.github/actions/ci-contract-check@main
+    uses: tuna-os/.github/.github/actions/ci-contract-check@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       criteria-path: .github/green-criteria.yml
       workflows-dir: .github/workflows
@@ -76,7 +76,7 @@ Downstream workflows or composite actions reference these actions using:
 - **Usage:**
   ```yaml
   - name: Check fork safety
-    uses: tuna-os/.github/.github/actions/fork-safety-check@main
+    uses: tuna-os/.github/.github/actions/fork-safety-check@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       workflows-dir: .github/workflows
   ```
@@ -99,7 +99,7 @@ Downstream workflows or composite actions reference these actions using:
 - **Usage:**
   ```yaml
   - name: Publish Flatpak index
-    uses: tuna-os/.github/.github/actions/publish-flatpak-index@main
+    uses: tuna-os/.github/.github/actions/publish-flatpak-index@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       oci-dir: oci/mandelbrot-oci-x86_64
       repo-name: tuna-os/mandelbrot
@@ -123,7 +123,7 @@ Downstream workflows or composite actions reference these actions using:
 - **Usage:**
   ```yaml
   - name: Lint English prose
-    uses: tuna-os/.github/.github/actions/ste-lint@main
+    uses: tuna-os/.github/.github/actions/ste-lint@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       budget-file: .ste-budget
   ```
@@ -144,7 +144,7 @@ Downstream workflows or composite actions reference these actions using:
 - **Usage:**
   ```yaml
   - name: Update index
-    uses: tuna-os/.github/.github/actions/update-flatpak-index@main
+    uses: tuna-os/.github/.github/actions/update-flatpak-index@fded0603d7e383990e8259141419fe6c1d641f41 # main
     with:
       oci-dir: oci/mandelbrot-oci-x86_64
       repo-name: tuna-os/mandelbrot

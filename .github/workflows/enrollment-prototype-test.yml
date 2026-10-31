@@ -1,0 +1,53 @@
+name: Enrollment prototype tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'organization/**'
+      - 'ROADMAP-INDEX.md'
+      - 'scripts/enrollment-report.py'
+      - 'scripts/test_enrollment_report.py'
+      - 'scripts/check-workflow-permissions.py'
+      - 'scripts/test_check_workflow_permissions.py'
+      - 'scripts/roadmap-index.py'
+      - 'scripts/test-roadmap-index.py'
+      - '.github/scripts/**'
+      - '.github/workflows/enrollment-prototype-test.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'organization/**'
+      - 'ROADMAP-INDEX.md'
+      - 'scripts/enrollment-report.py'
+      - 'scripts/test_enrollment_report.py'
+      - 'scripts/check-workflow-permissions.py'
+      - 'scripts/test_check_workflow_permissions.py'
+      - 'scripts/roadmap-index.py'
+      - 'scripts/test-roadmap-index.py'
+      - '.github/scripts/**'
+      - '.github/workflows/enrollment-prototype-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.11'
+      - name: Install validator dependencies
+        run: python -m pip install 'jsonschema>=4,<5' 'PyYAML>=6,<7'
+      - name: Run complete affected test modules
+        run: |
+          python -m unittest scripts.test_enrollment_report scripts.test_check_workflow_permissions
+          python scripts/test-roadmap-index.py
+          python .github/scripts/test_ci_contract.py
+          python .github/scripts/test_workflow_introspector.py

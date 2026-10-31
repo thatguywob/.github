@@ -163,9 +163,10 @@ jobs:
 
 **Notes.** `checks` is parsed with `fromJSON`, so it must be a valid JSON array
 of strings — a bare string like `shellcheck` (not `["shellcheck"]`) fails to
-parse and fails the job. `actionlint` runs with `continue-on-error` and
-`2>/dev/null` by design; it reports but does not block. `justfmt` only runs when
-a top-level `Justfile` exists.
+parse and fails the job. `actionlint` checks both `.yml` and `.yaml` workflow
+files, preserves diagnostics, and fails the job on lint errors. It skips when
+neither extension is present. `justfmt` only runs when a top-level `Justfile`
+exists.
 
 ### ste-lint.yml
 

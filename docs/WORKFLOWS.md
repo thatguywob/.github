@@ -387,6 +387,9 @@ jobs:
 
 ## Common patterns and anti-patterns
 
+For safe input and context handling in `run:`, including quoting and list
+arguments, see [Safe environment variables in GitHub Actions](ACTION_SECURITY.md).
+
 | Do | Avoid |
 |---|---|
 | Call a reusable workflow as a **job** (`jobs.x: uses:`). | Calling it as a **step** — `workflow_call` jobs cannot run inside another job's `steps:`. |

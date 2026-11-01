@@ -29,6 +29,9 @@ APIs: check callers before renaming an input or changing what a default means.
 
 ## Don't put an input back into a script body
 
+For developer guidance and examples, see
+[`docs/ACTION_SECURITY.md`](docs/ACTION_SECURITY.md).
+
 `update-flatpak-index/action.yml` routes every input through `env:` rather
 than `${{ }}` interpolation, and that is load-bearing. **Actions substitutes
 expressions into the script TEXT before bash parses it**, so an interpolated

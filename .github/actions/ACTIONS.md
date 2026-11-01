@@ -2,6 +2,10 @@
 
 Index of reusable composite actions hosted in `.github/actions/` in `tuna-os/.github`.
 
+When writing or changing an action, follow
+[Safe environment variables in GitHub Actions](../../docs/ACTION_SECURITY.md)
+for input mapping, shell quoting, and multi-item arguments.
+
 Cross-repository callers pin a complete commit SHA and keep it current through Renovate, following the [workflow adoption policy](../../docs/WORKFLOWS.md#adopting-a-workflow). The examples use reviewed revision `fded0603d7e383990e8259141419fe6c1d641f41`; the existing same-repository pin-checker exception is unchanged.
 
 ```yaml

@@ -46,34 +46,53 @@ whose jobs hold `packages: write` and `FLATPAK_INDEX_TOKEN`.
 
 ## The drift check, and what it does not cover
 
-`flatpak-tooling-drift-check.yml` is an interim guard for
-[tuna-os/tunaOS#1183](https://github.com/tuna-os/tunaOS/issues/1183): `update-index.py`
-was byte-copied across repos with no shared source of truth. Weekly, it
-compares eight application repos' `.github/scripts/update-index.py` against
-`.github/actions/update-flatpak-index/update-index.py`, which it treats as
-canonical, and opens or comments on an issue when any has drifted.
+[`flatpak-tooling-drift-check.yml`](.github/workflows/flatpak-tooling-drift-check.yml)
+is an interim guard for
+[tuna-os/tunaOS#1183](https://github.com/tuna-os/tunaOS/issues/1183). Its canonical
+source is `tuna-os/flatpak-index/scripts/update-index.py`. The action copy here,
+`.github/actions/update-flatpak-index/update-index.py`, must match it byte for
+byte; the workflow checks that link before classifying application repos.
 
-Two things to know before touching it:
+### Current status
 
-- **It has failed on every scheduled run since 2026-08-17.** `dualcut` is in
-  its list and has drifted; the other seven no longer carry the file, which
-  the workflow reports as a warning.
-- **Its list is not the set of repos that carry a copy.** On default branches
-  today:
+As verified on 2026-11-02, the workflow is **manually disabled**
+(`disabled_manually`); the Monday 06:00 UTC schedule in YAML is not running.
+The [last scheduled run, 2026-10-12](https://github.com/tuna-os/.github/actions/runs/38267777559),
+failed with two drifted repos: `blueshell` and `docs`. The other six configured
+repos were migrated. Both canonical and action copies currently have blob
+`564262b2473e41a049593852c7a5cee0df23d3d3`.
 
-| repo | path | blob | checked? |
-|---|---|---|---|
-| `.github` | `.github/actions/update-flatpak-index/update-index.py` | `6eaa8186` | canonical |
-| `dualcut` | `.github/scripts/update-index.py` | `c6e3acca` | yes — drifted |
-| `flatpak-index` | `scripts/update-index.py` | `b7dc0458` | **no** |
-| `docs` | `.github/scripts/update-index.py` | `b7dc0458` | **no** |
-| `Tavern` | `.github/scripts/update-index.py` | `ec916224` | **no** |
-| `Tavern` | `scripts/update-index.py` | `127aed10` | **no** |
+Re-enable the workflow once the two remaining migrations land:
+[tuna-os/blueshell#85](https://github.com/tuna-os/blueshell/issues/85) and
+[tuna-os/docs#448](https://github.com/tuna-os/docs/issues/448). Track migration
+progress in [#271](https://github.com/tuna-os/.github/issues/271); this dated
+snapshot documents the status requested in
+[#292](https://github.com/tuna-os/.github/issues/292).
 
-`tuna-os/flatpak-index`'s copy describes *itself* as the canonical one, which
-is a second definition the org's check does not recognise. Migrating a repo
-onto the composite action is the fix that removes the copy rather than
-watching it.
+### Coverage and limits
+
+The configured repo list is `Tavern bootc-installer blueshell docs dualcut
+finupdate gtk-office-suite mandelbrot`. For each repo's default branch, the
+workflow compares `.github/scripts/update-index.py` with canonical. Without a
+local copy, it looks for a workflow using the shared `publish-flatpak.yml`,
+`publish-flatpak-index`, or `update-flatpak-index` tooling before calling the
+repo migrated. A missing copy alone is an error, as is a divergent copy.
+
+`flatpak-index/scripts/update-index.py` is checked as the canonical source,
+and `docs` and `Tavern` are in the application list. Coverage is limited to
+that explicit list and the `.github/scripts/update-index.py` path; the check
+does not discover copies elsewhere (for example `scripts/update-index.py`
+in an app repo) or new publishers automatically. Add new flatpak publishers
+to `REPOS` when they adopt the remote.
+
+### Remediation
+
+Migrate app repos to the reusable `publish-flatpak.yml` workflow or the shared
+`publish-flatpak-index` / `update-flatpak-index` composite actions, then delete
+their vendored script. Manually copying the canonical script into each app
+leaves the duplication in place. If a local change is needed, port it to
+`tuna-os/flatpak-index/scripts/update-index.py` first and sync the action copy
+here byte for byte.
 
 ## Default branches are not all `main`
 

@@ -13,6 +13,17 @@ name: Flatpak Tooling Drift Check
 #
 # "Missing" is never treated as "migrated" on its own: a repo that moved or
 # dropped the file without adopting the shared tooling fails the check.
+#
+# Status (verified 2026-11-02; tuna-os/.github#292): manually disabled
+# (disabled_manually), so the schedule below is not running. Last scheduled
+# run, 2026-10-12: blueshell and docs drifted; the other six repos migrated.
+# https://github.com/tuna-os/.github/actions/runs/38267777559
+# Re-enable once tuna-os/blueshell#85 and tuna-os/docs#448 migrations land;
+# track migration progress in tuna-os/.github#271.
+# Canonical: tuna-os/flatpak-index/scripts/update-index.py. The action copy
+# .github/actions/update-flatpak-index/update-index.py must match byte for byte.
+# Coverage: REPOS below, at .github/scripts/update-index.py only; no discovery
+# of copies at other paths or new publishers. See AGENTS.md for remediation.
 
 on:
   schedule:
